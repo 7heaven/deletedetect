@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,6 +19,9 @@ public class MainService extends Service{
 
     private PackageManager packageManager;
     private ActivityManager activityManager;
+
+
+    private UninstallIntentReceiver receiver;
 
     private String previousActivity = "";
 
@@ -52,6 +56,19 @@ public class MainService extends Service{
 
         handler.post(runnable);
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.intent.action.QUERY_PACKAGE_RESTART");
+        intentFilter.addDataScheme("package");
+        intentFilter.setPriority(0);
+
+        this.registerReceiver(receiver, intentFilter);
+
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy(){
+        this.unregisterReceiver(receiver);
+        super.onDestroy();
     }
 }

@@ -37,7 +37,9 @@
         <service
             android:name="com.example.deletedetect.MainService" />
 
-        <receiver android:name="com.example.deletedetect.UninstallIntentReceiver">
+        <receiver
+            android:name="com.example.deletedetect.UninstallIntentReceiver"
+            android:exported="true">
             <intent-filter android:priority="0">
                 <action android:name="android.intent.action.QUERY_PACKAGE_RESTART" />
                 <data android:scheme="package" />
