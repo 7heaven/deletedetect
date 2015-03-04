@@ -23,16 +23,7 @@
 
         <activity
             android:name=".DeleteActivity"
-            android:screenOrientation="portrait">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.DELETE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="package"  />
-            </intent-filter>
-
-        </activity>
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.example.deletedetect.MainService" />

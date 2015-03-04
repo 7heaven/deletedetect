@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,10 +32,24 @@ public class MainService extends Service{
         @Override
         public void run(){
             List<ActivityManager.RunningTaskInfo> taskInfos = activityManager.getRunningTasks(1);
+            List<ActivityManager.RecentTaskInfo> recentTaskInfos = activityManager.getRecentTasks(1, ActivityManager.RECENT_WITH_EXCLUDED);
             String activityName = taskInfos.get(0).topActivity.getClassName();
+            Intent baseIntent = recentTaskInfos.get(0).baseIntent;
+
+
 
             if(!activityName.equals(previousActivity)){
                 Log.d("activity:", activityName);
+
+                if(baseIntent != null){
+                    Log.d("intent_action", baseIntent.toString());
+                    if(baseIntent.getAction() != null && baseIntent.getAction().equals("android.intent.action.DELETE") && baseIntent.getData().getEncodedSchemeSpecificPart().equals(MainService.this.getPackageName())){
+                        Intent intent = new Intent(MainService.this, DeleteActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        MainService.this.startActivity(intent);
+                    }
+                }
 
                 previousActivity = activityName;
             }
